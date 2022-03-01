@@ -2,8 +2,6 @@
 
 using namespace std;
 
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-
 vector<string> get_dict() {
   ifstream in("wordle-allowed-guesses.txt");
   vector<string> v;
@@ -12,13 +10,6 @@ vector<string> get_dict() {
     v.push_back(s);
   }
   in.close();
-  shuffle(begin(v), end(v), rng);
-  stable_sort(begin(v), end(v), [](auto& s, auto& t) {
-    set<char> S, T;
-    for (char c : s) S.insert(c);
-    for (char c : t) T.insert(c);
-    return S.size() > T.size();
-  });
   return v;
 }
 
@@ -56,7 +47,7 @@ void update(vector<string>& dict, string t, string f) {
 
 int main() {
   vector<string> dict = get_dict();
-  string guess = "arise", result;
+  string guess = dict[0], result;
   cout << "? " << guess << " (1/" << dict.size() << ")" << endl;
   cin >> result;
   for (;;) {
